@@ -6,7 +6,7 @@ import { mkdir, exists, rm } from "node:fs/promises";
 
 const uploadDir = "images";
 const rand = () => Math.random().toString(24).slice(2, 8);
-const port = process.env.PORT || 3000;
+const port = +(process.env.PORT as string) || 3000;
 const route = "/image";
 const destination = join(__dirname, uploadDir);
 
@@ -42,4 +42,4 @@ express()
   .use(route, upload.single("image"))
   .post(route, uploadHandler)
   .delete(route, deleteHandler)
-  .listen(port, console.info);
+  .listen(port, '0.0.0.0', console.info);
