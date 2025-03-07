@@ -35,7 +35,7 @@ if (!(await exists(uploadDir))) await mkdir(uploadDir);
 
 express()
   .use(cors({
-    origin: 'https://keyai.vercel.app', 
+    origin: '*', 
     methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
     credentials: true
   }))
