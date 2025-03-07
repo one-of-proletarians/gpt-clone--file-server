@@ -18,8 +18,6 @@ const upload = multer({
 });
 
 const uploadHandler = (rq: Request, rs: Response) => {
-  rs.setHeader("Access-Control-Allow-Origin", "https://keyai.vercel.app/chat");
-  rs.setHeader("Access-Control-Allow-Credentials", "true");
   if (!rq.file) rs.status(400).send("No image uploaded.");
   else rs.json(`${rq.protocol}://${rq.get("host")}/image/${rq.file.filename}`);
 };
@@ -36,10 +34,12 @@ const deleteHandler = async (rq: Request, rs: Response) => {
 if (!(await exists(uploadDir))) await mkdir(uploadDir);
 
 express()
+  .options('*', cors()) 
   .use(cors({
-    origin: '*', 
+    origin: true, 
     methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
-    credentials: true
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
   }))
   .use(route, express.static(destination))
   .use(route, upload.single("image"))
