@@ -34,7 +34,10 @@ const deleteHandler = async (rq: Request, rs: Response) => {
 if (!(await exists(uploadDir))) await mkdir(uploadDir);
 
 express()
-  .use(cors())
+  .use(cors({
+    origin: 'https://keyai.vercel.app', // Разрешаем запросы только с этого сайта
+    methods: ['GET', 'POST', 'DELETE'], // Разрешаем нужные методы
+  }))
   .use(route, express.static(destination))
   .use(route, upload.single("image"))
   .options('*', cors())
