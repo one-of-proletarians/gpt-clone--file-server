@@ -35,9 +35,9 @@ if (!(await exists(uploadDir))) await mkdir(uploadDir);
 
 express()
   .use(cors())
-  .options('*', cors())
   .use(route, express.static(destination))
   .use(route, upload.single("image"))
+  .options('*', cors())
   .post(route, uploadHandler)
   .delete(route, deleteHandler)
   .listen(port, console.info);
