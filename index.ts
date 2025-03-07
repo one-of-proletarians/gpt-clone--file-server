@@ -36,7 +36,7 @@ if (!(await exists(uploadDir))) await mkdir(uploadDir);
 express()
   .use(cors({
     origin: '*', 
-    methods: ['GET', 'POST', 'DELETE'], 
+    methods: ['GET', 'POST', 'DELETE', 'OPTIONS'], 
   }))
   .use(route, express.static(destination))
   .use(route, upload.single("image"))
