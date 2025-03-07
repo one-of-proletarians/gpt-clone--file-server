@@ -34,13 +34,26 @@ const deleteHandler = async (rq: Request, rs: Response) => {
 if (!(await exists(uploadDir))) await mkdir(uploadDir);
 
 express()
-  .options('*', cors()) 
-  .use(cors({
-    origin: true, 
-    methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization']
-  }))
+  .options('*', (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Credentials', "true");
+    res.sendStatus(200);
+  })
+  // .use(cors({
+  //   origin: true,
+  //   methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+  //   credentials: true,
+  //   allowedHeaders: ['Content-Type', 'Authorization']
+  // }))
+  .use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Credentials', "true");
+    next();
+  })
   .use(route, express.static(destination))
   .use(route, upload.single("image"))
   .post(route, uploadHandler)
