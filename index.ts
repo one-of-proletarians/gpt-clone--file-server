@@ -1,3 +1,4 @@
+
 import express, { type Request, type Response } from "express";
 import multer, { diskStorage } from "multer";
 import cors from "cors";
@@ -6,7 +7,7 @@ import { mkdir, exists, rm } from "node:fs/promises";
 import sharp from "sharp";
 
 const uploadDir = "images";
-const maxSize = 1500;
+const maxSize = 900;
 const rand = () => Math.random().toString(24).slice(2, 8);
 const port = process.env.PORT || 3000;
 const route = "/image";
@@ -14,6 +15,9 @@ const destination = join(__dirname, uploadDir);
 
 const upload = multer({
   storage: diskStorage({
+  limits: {
+    fileSize: 9999999999,
+  },
     destination,
     filename: (_, f, cb) => cb(null, rand() + extname(f.originalname)),
   }),
@@ -33,7 +37,7 @@ const uploadHandler = async (rq: Request, rs: Response) => {
         resize = [null, maxSize];
       }
 
-      const filename = `${rand()}.${format}`;
+      const filename = `${rand()}_resized.${format}`;
       const filepath = join(__dirname, "images", filename);
       await image.resize(...resize).toFile(filepath);
       await rm(rq.file.path);
