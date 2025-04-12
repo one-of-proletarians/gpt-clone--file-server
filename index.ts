@@ -26,7 +26,7 @@ const uploadHandler = async (rq: Request, rs: Response) => {
   else {
     const image = sharp(rq.file.path);
     let { width: w, height: h, format } = await image.metadata();
-    let { width, height } = resizeImageIfNeeded(w!, h!, 512, 2);
+    let { width, height } = resizeImageIfNeeded(w!, h!, 512, 4);
     const filename = `${rand()}_resized__${w}x${h}__${width}x${height}.${format}`;
     const filepath = join(__dirname, "images", filename);
     await image.resize({ width, height }).toFile(filepath);
