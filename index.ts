@@ -25,13 +25,11 @@ const uploadHandler = async (rq: Request, rs: Response) => {
   if (!rq.file) rs.status(400).send("No image uploaded.");
   else {
     const image = sharp(rq.file.path);
-    const { width, height, format } = await image.metadata();
-
-    const filename = `${rand()}.${format}`;
+    let { width: w, height: h, format } = await image.metadata();
+    let { width, height } = resizeImageIfNeeded(w!, h!, 512, 2);
+    const filename = `${rand()}_resized__${w}x${h}__${width}x${height}.${format}`;
     const filepath = join(__dirname, "images", filename);
-    await image
-      .resize(resizeImageIfNeeded(width!, height!, 512, 4))
-      .toFile(filepath);
+    await image.resize({ width, height }).toFile(filepath);
     await rm(rq.file.path);
 
     rs.json(`${rq.protocol}://${rq.get("host")}/image/${filename}`);
